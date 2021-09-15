@@ -22,9 +22,19 @@ struct
         Reset(Callcc(Lam("k", App(App(Var "+", Lit 6),
                                   App(Var "k", Lit 1)))))); (* 4 *)
   ]
-  let _ = List.map (fun p -> S.run p |> S.value_to_string |> print_endline) progs
+  let res = List.map (fun p -> S.run p |> S.value_to_string) progs
 end
 
 module R = Run(Sem)
-module R = Run(Sem_ops)
-module R = Run(Sem_fo)
+let reference = R.res
+
+module Check(S : Sem) =
+struct
+  open Run(Sem)
+  let () = assert (res = reference)
+end
+
+module M = Check(Sem_ops)
+module M = Check(Sem_fo)
+module M = Check(Sem2)
+module M = Check(Sem2_fo)
