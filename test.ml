@@ -25,17 +25,15 @@ struct
   let res = List.map (fun p -> S.run p |> S.value_to_string) progs
 end
 
-module R = Run(Sem)
-let reference = R.res
+let reference =
+  let open Run(Sem) in res
 
-module Check(S : Sem) =
-struct
-  open Run(S)
-  let () = assert (res = reference)
-end
+let check (module S : Sem) =
+  let open Run(S) in
+  assert (res = reference)
 
-module M = Check(Sem_ops)
-module M = Check(Sem_fo)
-module M = Check(Sem2)
-module M = Check(Sem2_fo)
-module M = Check(Sem2_uncurried)
+let () = check (module Sem_ops)
+let () = check (module Sem_fo)
+let () = check (module Sem2)
+let () = check (module Sem2_fo)
+let () = check (module Sem2_uncurried)
