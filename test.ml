@@ -30,7 +30,7 @@ let reference = R.res
 
 module Check(S : Sem) =
 struct
-  open Run(Sem)
+  open Run(S)
   let () = assert (res = reference)
 end
 
